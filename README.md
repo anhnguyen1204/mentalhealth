@@ -14,7 +14,7 @@ Thought for 6s
 
 - Auth: Login, register, or continue as guest.
 
-## 3,Tech stack:
+## 3, Tech stack:
 
 - Frontend: Streamlit + Plotly.
 
@@ -32,7 +32,7 @@ Thought for 6s
 
 + Images: data/images/.
 
-## 4,How it works:
+## 4, How it works:
 
 - Chat conversation builds context.
 
@@ -41,7 +41,7 @@ Thought for 6s
 - The app parses and normalizes fields, then saves via a robust save_score function with deduplication.
 
 - The Tracking page maps scores to numeric values and renders a 7-day chart.
--
+
 - Run (high level):
 
 Use Python 3.10/3.11, set OPENAI_API_KEY, install compatible LlamaIndex + OpenAI + Streamlit deps.
