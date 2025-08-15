@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>Exercise</title>
+	<link rel="stylesheet" href="/public/css/main.css" />
+</head>
+<body>
+	<header>
+		<nav>
+			<a href="/lessons/<%= exercise.lesson.id %>">Back to Lesson</a>
+		</nav>
+	</header>
+	<main>
+		<h1>Exercise</h1>
+		<p><%= exercise.questionText %></p>
+		<form method="post" action="/exercises/<%= exercise.id %>/submit">
+			<% if (exercise.type === 'MCQ') { %>
+				<% exercise.options.forEach(opt => { %>
+					<label>
+						<input type="radio" name="selectedOptionId" value="<%= opt.id %>" required>
+						<%= opt.text %>
+					</label>
+				<% }) %>
+			<% } else { %>
+				<label>Answer <input type="text" name="textAnswer" required></label>
+			<% } %>
+			<button type="submit">Submit</button>
+		</form>
+	</main>
+</body>
+</html>

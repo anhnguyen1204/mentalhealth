@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>Add Exercise - <%= lesson.title %></title>
+	<link rel="stylesheet" href="/public/css/main.css" />
+	<script>
+	function onTypeChange(sel) {
+		var mcq = document.getElementById('mcq');
+		var shortAns = document.getElementById('short');
+		if (sel.value === 'MCQ') { mcq.style.display = 'block'; shortAns.style.display = 'none'; }
+		else { mcq.style.display = 'none'; shortAns.style.display = 'block'; }
+	}
+	</script>
+</head>
+<body>
+	<header>
+		<nav>
+			<a href="/lessons/<%= lesson.id %>">Back to Lesson</a>
+		</nav>
+	</header>
+	<main>
+		<h1>Add Exercise - <%= lesson.title %></h1>
+		<form method="post" action="/exercises">
+			<input type="hidden" name="lessonId" value="<%= lesson.id %>">
+			<label>Type
+				<select name="type" onchange="onTypeChange(this)">
+					<option value="MCQ">Multiple Choice</option>
+					<option value="SHORT">Short Answer</option>
+				</select>
+			</label>
+			<label>Question
+				<textarea name="questionText" required rows="4"></textarea>
+			</label>
+			<div id="mcq">
+				<label>Option A <input type="text" name="optionA"></label>
+				<label>Option B <input type="text" name="optionB"></label>
+				<label>Option C <input type="text" name="optionC"></label>
+				<label>Option D <input type="text" name="optionD"></label>
+				<label>Correct Option
+					<select name="correctOption">
+						<option value="0">A</option>
+						<option value="1">B</option>
+						<option value="2">C</option>
+						<option value="3">D</option>
+					</select>
+				</label>
+			</div>
+			<div id="short" style="display:none">
+				<label>Correct Answer (optional for self-check)
+					<input type="text" name="correctAnswer">
+				</label>
+			</div>
+			<button type="submit">Create Exercise</button>
+		</form>
+	</main>
+</body>
+</html>
