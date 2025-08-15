@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title><%= lesson.title %></title>
+	<link rel="stylesheet" href="/public/css/main.css" />
+</head>
+<body>
+	<header>
+		<nav>
+			<a href="/">Lessons</a>
+			<% if (currentUser && currentUser.role === 'TEACHER') { %>
+				<a href="/exercises/new/<%= lesson.id %>">Add Exercise</a>
+			<% } %>
+		</nav>
+	</header>
+	<main>
+		<h1><%= lesson.title %></h1>
+		<p><%= lesson.description || '' %></p>
+		<% if (lesson.videoPath) { %>
+			<video src="<%= lesson.videoPath %>" controls width="720"></video>
+		<% } %>
+		<% if (lesson.notes) { %>
+			<div class="notes"><%- lesson.notes %></div>
+		<% } %>
+		<section>
+			<h2>Exercises</h2>
+			<ul>
+				<% lesson.exercises.forEach(ex => { %>
+					<li><a href="/exercises/<%= ex.id %>"><%= ex.questionText.substring(0, 80) %></a></li>
+				<% }) %>
+			</ul>
+		</section>
+	</main>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>Submissions</title>
+	<link rel="stylesheet" href="/public/css/main.css" />
+</head>
+<body>
+	<header>
+		<nav>
+			<a href="/teacher">Back</a>
+		</nav>
+	</header>
+	<main>
+		<h1>Submissions</h1>
+		<table>
+			<thead>
+				<tr>
+					<th>Student</th>
+					<th>Lesson</th>
+					<th>Question</th>
+					<th>Answer</th>
+					<th>Correct?</th>
+					<th>Time</th>
+				</tr>
+			</thead>
+			<tbody>
+				<% submissions.forEach(s => { %>
+					<tr>
+						<td><%= s.student.name %></td>
+						<td><%= s.exercise.lesson.title %></td>
+						<td><%= s.exercise.questionText.substring(0, 80) %></td>
+						<td>
+							<% if (s.selectedOption) { %>
+								<%= s.selectedOption.text %>
+							<% } else { %>
+								<%= s.textAnswer || '' %>
+							<% } %>
+						</td>
+						<td><%= s.isCorrect === null ? '-' : (s.isCorrect ? 'Yes' : 'No') %></td>
+						<td><%= new Date(s.createdAt).toLocaleString() %></td>
+					</tr>
+				<% }) %>
+			</tbody>
+		</table>
+	</main>
+</body>
+</html>

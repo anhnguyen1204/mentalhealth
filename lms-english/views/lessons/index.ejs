@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>English LMS</title>
+	<link rel="stylesheet" href="/public/css/main.css" />
+</head>
+<body>
+	<header>
+		<nav>
+			<a href="/">Lessons</a>
+			<% if (currentUser) { %>
+				<span>Welcome, <%= currentUser.name %> (<%= currentUser.role %>)</span>
+				<% if (currentUser.role === 'TEACHER') { %>
+					<a href="/lessons/new">New Lesson</a>
+					<a href="/teacher">Teacher</a>
+				<% } %>
+				<form method="post" action="/logout" style="display:inline">
+					<button type="submit">Logout</button>
+				</form>
+			<% } else { %>
+				<a href="/login">Login</a>
+				<a href="/signup">Sign up</a>
+			<% } %>
+		</nav>
+	</header>
+	<main>
+		<h1>Lessons</h1>
+		<div class="lesson-list">
+			<% lessons.forEach(lesson => { %>
+				<div class="card">
+					<h2><a href="/lessons/<%= lesson.id %>"><%= lesson.title %></a></h2>
+					<p><%= lesson.description || '' %></p>
+					<p class="meta">By <%= lesson.createdBy?.name || 'Unknown' %></p>
+				</div>
+			<% }) %>
+		</div>
+	</main>
+</body>
+</html>

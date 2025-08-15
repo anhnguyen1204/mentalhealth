@@ -1,0 +1,79 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  STUDENT
+  TEACHER
+}
+
+enum ExerciseType {
+  MCQ
+  SHORT
+}
+
+model User {
+  id            Int        @id @default(autoincrement())
+  email         String     @unique
+  name          String
+  passwordHash  String
+  role          Role       @default(STUDENT)
+  lessons       Lesson[]   @relation("LessonCreatedBy")
+  responses     Response[]
+  createdAt     DateTime   @default(now())
+}
+
+model Lesson {
+  id          Int        @id @default(autoincrement())
+  title       String
+  description String?
+  videoPath   String?
+  notes       String?
+  createdAt   DateTime   @default(now())
+
+  createdById Int
+  createdBy   User       @relation(name: "LessonCreatedBy", fields: [createdById], references: [id])
+
+  exercises   Exercise[]
+}
+
+model Exercise {
+  id            Int              @id @default(autoincrement())
+  lessonId      Int
+  lesson        Lesson           @relation(fields: [lessonId], references: [id])
+  questionText  String
+  type          ExerciseType
+  correctAnswer String?
+  options       ExerciseOption[]
+  responses     Response[]
+}
+
+model ExerciseOption {
+  id         Int       @id @default(autoincrement())
+  exerciseId Int
+  exercise   Exercise  @relation(fields: [exerciseId], references: [id])
+  text       String
+  isCorrect  Boolean   @default(false)
+  responses  Response[]
+}
+
+model Response {
+  id                Int             @id @default(autoincrement())
+  exerciseId        Int
+  exercise          Exercise        @relation(fields: [exerciseId], references: [id])
+  studentId         Int
+  student           User            @relation(fields: [studentId], references: [id])
+  selectedOptionId  Int?
+  selectedOption    ExerciseOption? @relation(fields: [selectedOptionId], references: [id])
+  textAnswer        String?
+  isCorrect         Boolean?
+  createdAt         DateTime        @default(now())
+}

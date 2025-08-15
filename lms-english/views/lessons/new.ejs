@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>New Lesson</title>
+	<link rel="stylesheet" href="/public/css/main.css" />
+</head>
+<body>
+	<header>
+		<nav>
+			<a href="/">Lessons</a>
+		</nav>
+	</header>
+	<main>
+		<h1>Create Lesson</h1>
+		<form method="post" action="/lessons" enctype="multipart/form-data">
+			<label>Title <input type="text" name="title" required></label>
+			<label>Description <textarea name="description"></textarea></label>
+			<label>Notes (HTML allowed) <textarea name="notes" rows="6"></textarea></label>
+			<label>Video <input type="file" name="video" accept="video/*"></label>
+			<button type="submit">Create</button>
+		</form>
+	</main>
+</body>
+</html>
