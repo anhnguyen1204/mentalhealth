@@ -5,6 +5,7 @@ import re
 import streamlit as st
 from llama_index.core import load_index_from_storage
 from llama_index.core import StorageContext
+from llama_index.core import Settings
 from llama_index.core.memory import ChatMemoryBuffer
 from llama_index.core.tools import QueryEngineTool, ToolMetadata
 from llama_index.agent.openai import OpenAIAgent
@@ -73,6 +74,14 @@ def save_score(score, content, total_guess, username):
                     data = lines
                 except Exception:
                     data = []
+        # Deduplicate: skip append if an identical recent entry exists
+        for existing_entry in reversed(data[-5:]):
+            if (
+                existing_entry.get("username") == username
+                and str(existing_entry.get("Score", "")).lower() == str(score).lower()
+                and str(existing_entry.get("Content", "")).strip() == str(content).strip()
+            ):
+                return existing_entry
         data.append(new_entry)
         with open(SCORES_FILE, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=4, ensure_ascii=False)
@@ -190,7 +199,8 @@ def chat_interface(agent, chat_store, container):
                 "total_guess (integer number of distinct conditions you considered), and "
                 "content (a concise, clear mental health summary and preliminary diagnosis)."
             )
-            summary_response = str(agent.chat(summary_prompt))
+            completion_response = Settings.llm.complete(summary_prompt)
+            summary_response = getattr(completion_response, "text", str(completion_response))
 
             # Parse values from LLM response
             score, total_guess, content = _extract_structured_summary(summary_response)
