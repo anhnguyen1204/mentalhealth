@@ -27,13 +27,13 @@ def load_scores(file, specific_username):
 
 def score_to_numeric(score):
     score = score.lower()
-    if score == "Bad":
+    if score == "bad":
         return 1
-    elif score == "Average":
+    elif score == "average":
         return 2
-    elif score == "Quite good":
+    elif score == "quite good":
         return 3
-    elif score == "Good":
+    elif score == "good":
         return 4
 
 def plot_scores(df):
@@ -50,10 +50,10 @@ def plot_scores(df):
 
     # Định nghĩa bảng màu
     color_map = {
-        'Bad': 'red',
-        'Average': 'orange',
-        'Quite Good': 'yellow',
-        'Good': 'green'
+        'bad': 'red',
+        'average': 'orange',
+        'quite Good': 'yellow',
+        'good': 'green'
     }
 
     # Ánh xạ các giá trị 'Score' tới màu sắc
