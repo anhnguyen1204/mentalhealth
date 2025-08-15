@@ -12,8 +12,12 @@ st.set_page_config(layout="wide")
 # Hàm đọc dữ liệu từ file JSON
 def load_scores(file, specific_username):
     if os.path.exists(file) and os.path.getsize(file) > 0:
-        with open(file, 'r') as f:
-            data = json.load(f)
+        with open(file, 'r', encoding='utf-8') as f:
+            try:
+                data = json.load(f)
+            except json.JSONDecodeError:
+                f.seek(0)
+                data = [json.loads(line) for line in f if line.strip()]
 
         # Ensure data is a list of records (each record is a dictionary)
         if isinstance(data, dict):
@@ -26,15 +30,17 @@ def load_scores(file, specific_username):
         return pd.DataFrame(columns=["username", "Time", "Score", "Content", "Total guess"])
 
 def score_to_numeric(score):
-    score = score.lower()
-    if score == "Bad":
+    score = str(score).strip().lower()
+    if score == "bad":
         return 1
-    elif score == "Average":
+    elif score == "average":
         return 2
-    elif score == "Quite good":
+    elif score == "quite good":
         return 3
-    elif score == "Good":
+    elif score == "good":
         return 4
+    else:
+        return None
 
 def plot_scores(df):
     # Chuyển đổi cột 'Time' thành kiểu datetime
@@ -50,14 +56,14 @@ def plot_scores(df):
 
     # Định nghĩa bảng màu
     color_map = {
-        'Bad': 'red',
-        'Average': 'orange',
-        'Quite Good': 'yellow',
-        'Good': 'green'
+        'bad': 'red',
+        'average': 'orange',
+        'quite good': 'yellow',
+        'good': 'green'
     }
 
     # Ánh xạ các giá trị 'Score' tới màu sắc
-    df_filtered['color'] = df_filtered['Score'].map(color_map)
+    df_filtered['color'] = df_filtered['Score'].str.lower().map(color_map)
     
     # Tạo biểu đồ sử dụng Plotly
     fig = go.Figure()
@@ -82,8 +88,9 @@ def plot_scores(df):
     )
 
     # Sử dụng Streamlit để hiển thị biểu đồ
-    st.plotly_chart(fig)
+    st.plotly_chart(fig, use_container_width=True)
     
+
 def main():
     sidebar.show_sidebar()
 
@@ -95,13 +102,15 @@ def main():
         
         # Lấy dữ liệu từ file
         df = load_scores(SCORES_FILE, st.session_state.username)
+        if df.empty:
+            st.info("No tracking data found for your account yet. Generate a summary in chat to create your first record.")
         if not df.empty:
             df["Time"] = pd.to_datetime(df["Time"])
             df["Score_num"] = df["Score"].apply(score_to_numeric)
-            df["Score"] = df["Score"].str.lower()
-            # Hiển thị biểu đ�� sức kh��e tinh thần
-            st.markdown("## Your mental health past 7 days")
-            plot_scores(df)
+            df = df.dropna(subset=["Score_num"])  # ensure numeric values for plotting
+            if not df.empty:
+                st.markdown("## Your mental health past 7 days")
+                plot_scores(df)
         # Chọn ngày để truy xuất thông tin
         st.markdown("## Query for daily mental health")
         date = st.date_input("Pick Date", datetime.now().date())
