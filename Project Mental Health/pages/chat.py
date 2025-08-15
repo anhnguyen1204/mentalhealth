@@ -6,7 +6,8 @@ from llama_index.core import Settings
 import src.sidebar as sidebar
 
 Settings.llm = OpenAI(model="gpt-4o-mini", temperature=0.2)
-openai.api_key = "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" 
+openai.api_key = #your api key
+
 
 def main():
     sidebar.show_sidebar()
