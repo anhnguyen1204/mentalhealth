@@ -5,14 +5,12 @@ from llama_index.core.extractors import SummaryExtractor
 from llama_index.embeddings.openai import OpenAIEmbedding
 from llama_index.core import Settings
 from llama_index.llms.openai import OpenAI
-import openai
 import streamlit as st
 from src.global_settings import STORAGE_PATH, FILES_PATH, CACHE_FILE
 from src.prompts import CUSTORM_SUMMARY_EXTRACT_TEMPLATE
 
 
-# Set OpenAI API key and model settings
-openai.api_key = "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" 
+# Set model settings (API key should be provided via environment: OPENAI_API_KEY)
 Settings.llm = OpenAI(model="gpt-4o-mini", temperature=0.2)
 
 def ingest_documents():
