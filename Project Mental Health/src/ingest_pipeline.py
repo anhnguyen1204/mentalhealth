@@ -12,7 +12,7 @@ from src.prompts import CUSTORM_SUMMARY_EXTRACT_TEMPLATE
 
 
 # Set OpenAI API key and model settings
-openai.api_key = "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" 
+openai.api_key = #your api key
 Settings.llm = OpenAI(model="gpt-4o-mini", temperature=0.2)
 
 def ingest_documents():
