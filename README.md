@@ -1,4 +1,3 @@
-Thought for 6s
 # Overview
 ## 1, What it is: 
 
